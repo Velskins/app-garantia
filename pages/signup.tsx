@@ -34,7 +34,7 @@ export default function Signup() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-white px-4">
       <div className="flex flex-col gap-4 w-full max-w-sm">
-        <h1 className="text-xl font-bold text-gray-800 text-center">Créer un compte</h1>
+        <h1 className="text-xl font-bold text-black-800 text-center">Créer un compte</h1>
 
         {erreur && <p className="text-red-500 text-sm">{erreur}</p>}
         {message && <p className="text-green-600 text-sm">{message}</p>}

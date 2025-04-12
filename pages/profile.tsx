@@ -78,12 +78,12 @@ export default function Profile() {
   return (
     <div className="min-h-screen flex flex-col bg-white pb-24">
       <div className="p-4">
-        <h1 className="text-xl font-bold text-gray-800">Mon profil</h1>
-        <p className="text-sm text-gray-500">Connecté en tant que :</p>
+        <h1 className="text-xl font-bold text-black-800">Mon profil</h1>
+        <p className="text-sm text-black-500">Connecté en tant que :</p>
         {email ? (
-          <p className="text-sm text-gray-700 font-semibold mt-1">{email}</p>
+          <p className="text-sm text-black-700 font-semibold mt-1">{email}</p>
         ) : (
-          <p className="text-sm text-gray-400 mt-1">Chargement...</p>
+          <p className="text-sm text-black-400 mt-1">Chargement...</p>
         )}
       </div>
 
@@ -132,7 +132,7 @@ export default function Profile() {
 
         <button
           onClick={handleLogout}
-          className="w-full py-3 mt-2 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 transition"
+          className="w-full py-3 mt-2 bg-gray-200 text-black-700 rounded-xl font-medium hover:bg-gray-300 transition"
         >
           Se déconnecter
         </button>
@@ -140,10 +140,10 @@ export default function Profile() {
 
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-sm flex justify-around py-2 z-50">
         <Link href="/dashboard">
-          <span className="text-sm text-gray-700">Garanties</span>
+          <span className="text-sm text-black-700">Garanties</span>
         </Link>
         <Link href="/reminders">
-          <span className="text-sm text-gray-700">Rappels</span>
+          <span className="text-sm text-black-700">Rappels</span>
         </Link>
         <Link href="/profile">
           <span className="text-sm text-blue-600 font-medium">Profil</span>

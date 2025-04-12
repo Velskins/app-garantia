@@ -41,7 +41,7 @@ export default function Auth() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-white px-4">
       <div className="flex flex-col gap-4 w-full max-w-sm">
-        <h1 className="text-xl font-bold text-gray-800 text-center">Connexion</h1>
+        <h1 className="text-xl font-bold text-black-800 text-center">Connexion</h1>
 
         {erreur && <p className="text-red-500 text-sm">{erreur}</p>}
 

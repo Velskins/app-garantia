@@ -51,7 +51,7 @@ export default function Reminders() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-gray-500">
+      <div className="min-h-screen flex items-center justify-center text-black-500">
         Chargement des rappels...
       </div>
     );
@@ -60,15 +60,15 @@ export default function Reminders() {
   return (
     <div className="min-h-screen flex flex-col bg-white pb-20">
       <div className="p-4">
-        <h1 className="text-xl font-bold text-gray-800">Rappels</h1>
-        <p className="text-sm text-gray-500">
+        <h1 className="text-xl font-bold text-black-800">Rappels</h1>
+        <p className="text-sm text-black-500">
           Garanties expirant dans les 30 jours
         </p>
       </div>
 
       <div className="flex flex-col gap-4 px-4">
         {rappels.length === 0 ? (
-          <p className="text-sm text-gray-400">Aucun rappel pour le moment.</p>
+          <p className="text-sm text-black-400">Aucun rappel pour le moment.</p>
         ) : (
           rappels.map((g) => (
             <div
@@ -89,10 +89,10 @@ export default function Reminders() {
           <span className="text-sm text-blue-600 font-medium">Garanties</span>
         </Link>
         <Link href="/reminders">
-          <span className="text-sm text-gray-700">Rappels</span>
+          <span className="text-sm text-black-700">Rappels</span>
         </Link>
         <Link href="/profile">
-          <span className="text-sm text-gray-700">Profil</span>
+          <span className="text-sm text-black-700">Profil</span>
         </Link>
       </nav>
     </div>
