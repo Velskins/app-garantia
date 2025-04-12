@@ -1,7 +1,9 @@
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabaseClient";
 import Tesseract from "tesseract.js";
+
 
 interface Garantie {
   id?: string;
@@ -385,10 +387,16 @@ return (
     </div>
 
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-sm flex justify-around py-2 z-50">
-      <a href="/dashboard" className="text-sm text-blue-600 font-medium">Garanties</a>
-      <a href="/reminders" className="text-sm text-gray-700">Rappels</a>
-      <a href="/profile" className="text-sm text-gray-700">Profil</a>
-    </nav>
+  <Link href="/dashboard">
+    <span className="text-sm text-blue-600 font-medium">Garanties</span>
+  </Link>
+  <Link href="/reminders">
+    <span className="text-sm text-gray-700">Rappels</span>
+  </Link>
+  <Link href="/profile">
+    <span className="text-sm text-gray-700">Profil</span>
+  </Link>
+</nav>
   </div>
 );
 }
