@@ -16,7 +16,7 @@ export default function Auth() {
       }
     };
     checkSession();
-  }, []);
+  }, [router]); // ✅ Ajout de router dans les dépendances
 
   const handleLogin = async () => {
     setErreur("");
