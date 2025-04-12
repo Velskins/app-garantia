@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
@@ -48,7 +49,7 @@ export default function Reminders() {
     };
 
     fetchRappels();
-  }, []);
+  }, [router]);
 
   if (isLoading) {
     return (

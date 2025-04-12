@@ -64,7 +64,7 @@ export default function Signup() {
           onClick={() => router.push("/auth")}
           className="text-blue-600 text-sm hover:underline"
         >
-          J'ai déjà un compte
+          J&apos;ai déjà un compte
         </button>
       </div>
     </div>

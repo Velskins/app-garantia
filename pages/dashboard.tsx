@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
@@ -53,7 +54,7 @@ export default function Dashboard() {
     };
 
     getSession();
-  }, []);
+  }, [router]);
 
   const fetchGaranties = async (uid: string) => {
     const { data } = await supabase
@@ -252,11 +253,14 @@ return (
   rel="noopener noreferrer"
   onClick={(e) => e.stopPropagation()}
 >
-  <img
+<div className="w-full max-h-64 relative rounded border overflow-hidden cursor-zoom-in hover:opacity-90 transition">
+  <Image
     src={g.facture_url}
     alt="Facture"
-    className="w-full max-h-64 object-contain border rounded hover:opacity-90 cursor-zoom-in transition"
+    layout="fill"
+    objectFit="contain"
   />
+</div>
 </a>
                 ) : (
                   <p className="text-gray-400 text-sm">Aucune facture liée.</p>
