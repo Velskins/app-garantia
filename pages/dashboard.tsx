@@ -247,21 +247,22 @@ return (
             {garantieOuverteId === g.id && (
               <div className="mt-3 space-y-2">
                 {g.facture_url ? (
-                  <a
-  href={g.facture_url}
-  target="_blank"
-  rel="noopener noreferrer"
-  onClick={(e) => e.stopPropagation()}
->
-<div className="w-full max-h-64 relative rounded border overflow-hidden cursor-zoom-in hover:opacity-90 transition">
-  <Image
-    src={g.facture_url}
-    alt="Facture"
-    layout="fill"
-    objectFit="contain"
-  />
-</div>
-</a>
+                  <Link href={g.facture_url} passHref legacyBehavior>
+  <a
+    target="_blank"
+    rel="noopener noreferrer"
+    onClick={(e) => e.stopPropagation()}
+  >
+    <div className="w-full max-h-64 relative rounded border overflow-hidden cursor-zoom-in hover:opacity-90 transition">
+      <Image
+        src={g.facture_url}
+        alt="Facture"
+        layout="fill"
+        objectFit="contain"
+      />
+    </div>
+  </a>
+</Link>
                 ) : (
                   <p className="text-gray-400 text-sm">Aucune facture liée.</p>
                 )}
