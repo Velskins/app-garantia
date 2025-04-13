@@ -212,7 +212,7 @@ const validerGarantieOCR = async () => {
   }
 };
 if (isLoading) {
-  return <div className="p-4 text-neutral-900">Chargement...</div>;
+  return <div className="p-4 text-neutral-700">Chargement...</div>;
 }
 
 return (
@@ -240,7 +240,7 @@ return (
             }
           >
             <h2 className="font-semibold text-black text-black">{g.nom}</h2>
-            <p className="text-sm text-black text-neutral-900">
+            <p className="text-sm text-black text-neutral-800">
               Achat : {g.date_achat} | Fin : {g.date_fin} ({g.duree_mois} mois)
             </p>
 
@@ -264,7 +264,7 @@ return (
   </a>
 </Link>
                 ) : (
-                  <p className="text-neutral-900 text-sm text-black">Aucune facture liée.</p>
+                  <p className="text-gray-400 text-sm text-black">Aucune facture liée.</p>
                 )}
                 <button
                   onClick={() => supprimerGarantie(g.id!)}
