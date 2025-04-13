@@ -26,7 +26,7 @@ export default function Signup() {
     if (error) {
       setErreur(error.message);
     } else {
-      setMessage("Compte créé ! Vous pouvez maintenant vous connecter.");
+      setMessage("Compte créé ! Valide maintenant ton compte via ton email.");
       setTimeout(() => router.push("/auth"), 2000); // redirection douce
     }
   };
@@ -46,6 +46,9 @@ export default function Signup() {
           onChange={(e) => setEmail(e.target.value)}
           className="border p-2 rounded-lg text-sm"
         />
+        <p className="text-xs text-gray-500 -mt-2">
+          Utilisez une adresse mail valide, un lien de confirmation vous sera envoyé.
+        </p>
         <input
           type="password"
           placeholder="Mot de passe"

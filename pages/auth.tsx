@@ -16,7 +16,7 @@ export default function Auth() {
       }
     };
     checkSession();
-  }, [router]); // ✅ Ajout de router dans les dépendances
+  }, [router]);
 
   const handleLogin = async () => {
     setErreur("");
@@ -32,7 +32,15 @@ export default function Auth() {
     });
 
     if (error) {
-      setErreur("Identifiants incorrects.");
+      if (
+        error.message.toLowerCase().includes("email not confirmed") ||
+        error.message.toLowerCase().includes("confirmation") ||
+        error.message.toLowerCase().includes("email confirmation")
+      ) {
+        setErreur("Veuillez confirmer votre adresse e-mail avant de vous connecter.");
+      } else {
+        setErreur("Identifiants incorrects ou compte non confirmé.");
+      }
     } else {
       router.push("/dashboard");
     }
