@@ -86,10 +86,10 @@ export default function Reminders() {
 
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-sm flex justify-around py-2 z-50">
         <Link href="/dashboard">
-          <span className="text-sm text-blue-600 font-medium">Garanties</span>
+          <span className="text-sm text-black-700 font-medium">Garanties</span>
         </Link>
         <Link href="/reminders">
-          <span className="text-sm text-black-700">Rappels</span>
+          <span className="text-sm text-blue-600">Rappels</span>
         </Link>
         <Link href="/profile">
           <span className="text-sm text-black-700">Profil</span>
