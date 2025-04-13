@@ -212,13 +212,13 @@ const validerGarantieOCR = async () => {
   }
 };
 if (isLoading) {
-  return <div className="p-4 text-black">Chargement...</div>;
+  return <div className="p-4 text-black-500">Chargement...</div>;
 }
 
 return (
   <div className="min-h-screen flex flex-col bg-white pb-32">
     <div className="p-4">
-      <h1 className="text-xl font-bold">Mes Garanties</h1>
+      <h1 className="text-xl text-black font-bold text-black">Mes Garanties</h1>
       <input
         type="text"
         placeholder="Rechercher une garantie..."
@@ -239,8 +239,8 @@ return (
               setGarantieOuverteId(garantieOuverteId === g.id ? null : g.id!)
             }
           >
-            <h2 className="font-semibold">{g.nom}</h2>
-            <p className="text-sm text-black">
+            <h2 className="font-semibold text-black text-black">{g.nom}</h2>
+            <p className="text-sm text-black text-black-600">
               Achat : {g.date_achat} | Fin : {g.date_fin} ({g.duree_mois} mois)
             </p>
 
@@ -264,7 +264,7 @@ return (
   </a>
 </Link>
                 ) : (
-                  <p className="text-black text-sm">Aucune facture liée.</p>
+                  <p className="text-black-400 text-sm text-black">Aucune facture liée.</p>
                 )}
                 <button
                   onClick={() => supprimerGarantie(g.id!)}
@@ -296,7 +296,7 @@ return (
             onChange={(e) => setNomProduit(e.target.value)}
             className="border p-2 rounded-lg text-sm mb-2 w-full"
           />
-          <label className="block text-sm text-black mb-1">
+          <label className="block text-sm text-black text-black-700 mb-1">
             Date d’achat :
             <input
               type="date"
@@ -396,10 +396,10 @@ return (
     <span className="text-sm text-blue-600 font-medium">Garanties</span>
   </Link>
   <Link href="/reminders">
-    <span className="text-sm text-black">Rappels</span>
+    <span className="text-sm text-black-700">Rappels</span>
   </Link>
   <Link href="/profile">
-    <span className="text-sm text-black">Profil</span>
+    <span className="text-sm text-black-700">Profil</span>
   </Link>
 </nav>
   </div>
