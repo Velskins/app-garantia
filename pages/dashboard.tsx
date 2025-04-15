@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabaseClient";
 import Tesseract from "tesseract.js";
+import * as pdfjsLib from "pdfjs-dist";
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+
 
 
 interface Garantie {
@@ -155,10 +158,81 @@ const lancerOCR = async (file: File) => {
 
 const handleFileSelect = (file: File | null) => {
   setUploadFile(file);
-  if (file) {
-    setUploadMessage(`✅ ${file.name} prêt à être analysé.`);
+
+  if (!file) return;
+
+  setUploadMessage(`✅ ${file.name} prêt à être analysé.`);
+
+  // Si le fichier est un PDF → conversion en image
+  if (file.type === "application/pdf") {
+    const fileReader = new FileReader();
+    fileReader.onload = async () => {
+      try {
+        const typedarray = new Uint8Array(fileReader.result as ArrayBuffer);
+
+        const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
+        const page = await pdf.getPage(1);
+        const viewport = page.getViewport({ scale: 1.5 });
+
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d")!;
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        await page.render({ canvasContext: context, viewport }).promise;
+
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const imageFile = new File([blob], "page1.png", { type: "image/png" });
+            lancerOCR(imageFile); // ← envoie à Tesseract
+          } else {
+            setUploadMessage("❌ Échec de la conversion PDF.");
+          }
+        }, "image/png");
+      } catch (err) {
+        console.error("Erreur lors du traitement du PDF :", err);
+        setUploadMessage("❌ Erreur lors de la lecture du PDF.");
+      }
+    };
+
+    fileReader.readAsArrayBuffer(file);
+  } else {
+    // Sinon, image classique
     lancerOCR(file);
   }
+};
+
+const lancerOCRFromText = (texte: string) => {
+  const lignes = texte.split("\n");
+  const ligneNom = lignes.find((ligne) =>
+    /(Produit|Article|Nom|Désignation|Référence)/i.test(ligne)
+  );
+  const nom = ligneNom ? ligneNom.split(":").pop()?.trim() || "" : "";
+
+  let dateAchat = "";
+  const formatISO = texte.match(/\b(20\d{2})[-\/\.](0?[1-9]|1[0-2])[-\/\.](0?[1-9]|[12][0-9]|3[01])\b/);
+  if (formatISO) {
+    dateAchat = formatISO[0].replace(/\./g, "-").replace(/\//g, "-");
+  } else {
+    dateAchat = parseDateFr(texte);
+  }
+
+  const dureeMatch =
+    texte.match(/(\d{1,2})\s?(mois|MOIS|Mois)/) ||
+    texte.match(/(\d{1,2})\s?(an|ans|année|années)/i);
+  let duree = 12;
+  if (dureeMatch) {
+    const nombre = parseInt(dureeMatch[1]);
+    const type = dureeMatch[2].toLowerCase();
+    duree = type.startsWith("an") ? nombre * 12 : nombre;
+  }
+
+  setEditorGarantie({
+    nom,
+    date_achat: dateAchat,
+    duree_mois: duree,
+    date_fin: "",
+  });
 };
 
 const validerGarantieOCR = async () => {
@@ -389,6 +463,14 @@ return (
           </div>
         )}
       </div>
+      <div className="mt-4">
+  <button
+    disabled
+    className="w-full bg-gray-300 text-gray-600 py-2 rounded-xl shadow font-medium cursor-not-allowed"
+  >
+    Caméra (bientôt dispo)
+  </button>
+</div>
     </div>
 
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-sm flex justify-around py-2 z-50">
