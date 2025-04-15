@@ -202,39 +202,6 @@ const handleFileSelect = (file: File | null) => {
   }
 };
 
-const lancerOCRFromText = (texte: string) => {
-  const lignes = texte.split("\n");
-  const ligneNom = lignes.find((ligne) =>
-    /(Produit|Article|Nom|Désignation|Référence)/i.test(ligne)
-  );
-  const nom = ligneNom ? ligneNom.split(":").pop()?.trim() || "" : "";
-
-  let dateAchat = "";
-  const formatISO = texte.match(/\b(20\d{2})[-\/\.](0?[1-9]|1[0-2])[-\/\.](0?[1-9]|[12][0-9]|3[01])\b/);
-  if (formatISO) {
-    dateAchat = formatISO[0].replace(/\./g, "-").replace(/\//g, "-");
-  } else {
-    dateAchat = parseDateFr(texte);
-  }
-
-  const dureeMatch =
-    texte.match(/(\d{1,2})\s?(mois|MOIS|Mois)/) ||
-    texte.match(/(\d{1,2})\s?(an|ans|année|années)/i);
-  let duree = 12;
-  if (dureeMatch) {
-    const nombre = parseInt(dureeMatch[1]);
-    const type = dureeMatch[2].toLowerCase();
-    duree = type.startsWith("an") ? nombre * 12 : nombre;
-  }
-
-  setEditorGarantie({
-    nom,
-    date_achat: dateAchat,
-    duree_mois: duree,
-    date_fin: "",
-  });
-};
-
 const validerGarantieOCR = async () => {
   if (!editorGarantie || !userId || !uploadFile) return;
 
