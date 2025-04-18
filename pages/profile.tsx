@@ -12,7 +12,7 @@ interface Garantie {
 
 export default function Profile() {
   const router = useRouter();
-  const [email, setEmail] = useState<string | null>(null);
+  const [email] = useState("");
   const [message, setMessage] = useState("");
   const [afficheFormulaire, setAfficheFormulaire] = useState(false);
   const [nouveauMDP, setNouveauMDP] = useState("");
