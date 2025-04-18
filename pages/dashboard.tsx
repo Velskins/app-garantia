@@ -16,6 +16,7 @@ interface Garantie {
   date_fin: string;
   duree_mois: number;
   facture_url?: string | null;
+  expired?: boolean;
 }
 
 const moisFrancais: { [key: string]: string } = {
@@ -59,14 +60,35 @@ export default function Dashboard() {
     getSession();
   }, [router]);
 
+
+  
   const fetchGaranties = async (uid: string) => {
     const { data } = await supabase
       .from("garanties")
       .select("*")
       .eq("user_id", uid)
       .order("date_achat", { ascending: false });
+  
+    if (data) {
+      await updateExpiredGaranties(data);
+      setGaranties(data.filter((g) => !g.expired));
+    }
+  };
 
-    if (data) setGaranties(data);
+  const updateExpiredGaranties = async (data: Garantie[]) => {
+    const aujourdHui = new Date();
+  
+    const promises = data.map(async (g) => {
+      const dateFin = new Date(g.date_fin);
+      if (!g.expired && dateFin < aujourdHui) {
+        await supabase
+          .from("garanties")
+          .update({ expired: true })
+          .eq("id", g.id);
+      }
+    });
+  
+    await Promise.all(promises);
   };
 
   const ajouterGarantie = async () => {

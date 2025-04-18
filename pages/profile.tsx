@@ -3,6 +3,13 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabaseClient";
 
+interface Garantie {
+  id: string;
+  nom: string;
+  date_fin: string;
+  expired?: boolean;
+}
+
 export default function Profile() {
   const router = useRouter();
   const [email, setEmail] = useState<string | null>(null);
@@ -10,23 +17,31 @@ export default function Profile() {
   const [afficheFormulaire, setAfficheFormulaire] = useState(false);
   const [nouveauMDP, setNouveauMDP] = useState("");
   const [confirmation, setConfirmation] = useState("");
+  const [expiredGaranties, setExpiredGaranties] = useState<Garantie[]>([]);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const { data } = await supabase.auth.getSession();
-      const session = data.session;
-
-      const user = session?.user as { email: string } | null;
-
-      if (!user) {
+    const fetchExpired = async () => {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const session = sessionData?.session;
+  
+      if (!session) {
         router.replace("/auth");
         return;
       }
-
-      setEmail(user.email);
+  
+      const { data, error } = await supabase
+        .from("garanties")
+        .select("*")
+        .eq("user_id", session.user.id)
+        .eq("expired", true)
+        .order("date_fin", { ascending: false });
+  
+      if (!error && data) {
+        setExpiredGaranties(data);
+      }
     };
-
-    fetchUser();
+  
+    fetchExpired();
   }, [router]);
 
   const handleLogout = async () => {
@@ -137,6 +152,21 @@ export default function Profile() {
           Se déconnecter
         </button>
       </div>
+      <div className="mt-6 px-4">
+  <h2 className="text-lg font-bold text-gray-800 mb-2">Garanties expirées</h2>
+  {expiredGaranties.length === 0 ? (
+    <p className="text-sm text-gray-500">Aucune garantie expirée pour le moment.</p>
+  ) : (
+    <ul className="space-y-2">
+      {expiredGaranties.map((g) => (
+        <li key={g.id} className="p-3 bg-gray-100 rounded shadow-sm">
+          <p className="font-semibold">{g.nom}</p>
+          <p className="text-sm text-gray-600">Expirée le {g.date_fin}</p>
+        </li>
+      ))}
+    </ul>
+  )}
+</div>
 
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-sm flex justify-around py-2 z-50">
         <Link href="/dashboard">
