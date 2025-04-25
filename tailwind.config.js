@@ -6,7 +6,12 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        // Poppins importée dans globals.css via Google Fonts
+        sans: ["Poppins", "Arial", "Helvetica", "sans-serif"],
+      },
+    },
   },
   plugins: [],
 };

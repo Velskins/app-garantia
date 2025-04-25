@@ -1,7 +1,12 @@
+import Image from "next/image"
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabaseClient";
+import nav1 from "@/assets/images/nav/nav1.png";
+import nav2 from "@/assets/images/nav/nav2.png";
+import nav3 from "@/assets/images/nav/nav3.png";
+import nav4 from "@/assets/images/nav/nav4.png";
 
 interface Garantie {
   id: string;
@@ -18,6 +23,7 @@ export default function Profile() {
   const [nouveauMDP, setNouveauMDP] = useState("");
   const [confirmation, setConfirmation] = useState("");
   const [expiredGaranties, setExpiredGaranties] = useState<Garantie[]>([]);
+  const { pathname } = useRouter();
 
   useEffect(() => {
     const fetchExpired = async () => {
@@ -157,28 +163,56 @@ export default function Profile() {
   {expiredGaranties.length === 0 ? (
     <p className="text-sm text-gray-500">Aucune garantie expirée pour le moment.</p>
   ) : (
-    <ul className="space-y-2">
-      {expiredGaranties.map((g) => (
-        <li key={g.id} className="p-3 bg-gray-100 rounded shadow-sm">
-          <p className="font-semibold">{g.nom}</p>
-          <p className="text-sm text-gray-600">Expirée le {g.date_fin}</p>
-        </li>
-      ))}
-    </ul>
+<ul className="space-y-2">
+  {expiredGaranties.map((g) => (
+    <li
+      key={g.id}
+      className="p-3 bg-gray-100 rounded shadow-sm cursor-pointer hover:bg-gray-200 transition"
+      onClick={() => router.push(`/garantie/${g.id}`)}
+    >
+      <p className="font-semibold">{g.nom}</p>
+      <p className="text-sm text-gray-600">Expirée le {g.date_fin}</p>
+    </li>
+  ))}
+</ul>
   )}
 </div>
 
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-sm flex justify-around py-2 z-50">
-        <Link href="/dashboard">
-          <span className="text-sm text-black-700">Garanties</span>
-        </Link>
-        <Link href="/reminders">
-          <span className="text-sm text-black-700">Rappels</span>
-        </Link>
-        <Link href="/profile">
-          <span className="text-sm text-blue-600 font-medium">Profil</span>
-        </Link>
-      </nav>
+<nav className="fixed bottom-5 left-10 right-10 shadow-t flex items-center z-50">
+  {/* Dashboard */}
+  <Link
+    href="/dashboard"
+    className="flex-1 flex justify-center items-center"
+  >
+
+      <Image src={nav1} alt="Garanties" width={30} height={30} />
+  </Link>
+
+  {/* Rappels */}
+  <Link href="/reminders" className="flex-1 flex justify-center items-center">
+    <Image src={nav2} alt="Rappels" width={30} height={30} />
+  </Link>
+
+  {/* Ajouter */}
+  <Link href="/add" className="flex-1 flex justify-center items-center">
+    <Image src={nav3} alt="Ajouter" width={45} height={45} />
+  </Link>
+
+  {/* Profil */}
+  <Link href="/profile" className="flex-1 flex justify-center items-center">
+  <div
+      className={`
+        py-4 px-6 rounded-br-xl
+        ${pathname === "/profile"
+          ? "bg-gradient-to-br from-pink-300 via-red-200 to-yellow-200"
+          : ""}
+      `}
+    >
+    <Image src={nav4} alt="Profil" width={30} height={30} />
+    </div>
+  </Link>
+</nav>
+
     </div>
   );
 }
