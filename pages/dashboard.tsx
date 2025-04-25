@@ -44,14 +44,14 @@ export default function Dashboard() {
   const [dureeMois, setDureeMois] = useState<number | "">("");
   const [recherche, setRecherche] = useState("");
   const [erreur, setErreur] = useState("");
-  const [formVisible, setFormVisible] = useState(false);
-  const [ocrVisible, setOcrVisible] = useState(false);
+  const [formVisible] = useState(false);
+  const [ocrVisible] = useState(false);
   const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [uploadMessage, setUploadMessage] = useState("");
-  const [marque, setMarque]     = useState<string>("");  
-  const [produit, setProduit]   = useState<string>("");
+  const [marque]     = useState<string>("");  
+  const [produit]   = useState<string>("");
   const [editorGarantie, setEditorGarantie] = useState<Garantie | null>(null);
-  const [garantieOuverteId, setGarantieOuverteId] = useState<string | null>(null);
+  const [garantieOuverteId] = useState<string | null>(null);
   const [ajoutVisible, setAjoutVisible] = useState(false);
   const { pathname } = useRouter();
   
