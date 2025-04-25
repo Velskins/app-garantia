@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabaseClient";
 import Tesseract from "tesseract.js";
@@ -55,33 +55,10 @@ export default function Dashboard() {
 
   
 
-  useEffect(() => {
-    const getSession = async () => {
-      const { data } = await supabase.auth.getSession();
-      const session = data?.session;
-
-      if (!session) {
-        router.replace("/auth");
-      } else {
-        setUserId(session.user.id);
-        fetchGaranties(session.user.id);
-      }
-
-      setIsLoading(false);
-    };
-
-    getSession();
-  }, [router]);
-
-  
-
-
-  
-  const fetchGaranties = async (uid: string) => {
-    // 1) Appel sans générique sur .from, et select en simple chaîne
+  const fetchGaranties = useCallback(async (uid: string) => {
     const { data, error } = await supabase
       .from("garanties")
-      .select("id, user_id, marque, produit, date_achat, date_fin, duree_mois, facture_url, expired")
+      .select("id, marque, produit, date_achat, date_fin, duree_mois, facture_url, expired")
       .eq("user_id", uid)
       .order("date_achat", { ascending: false });
   
@@ -89,13 +66,28 @@ export default function Dashboard() {
       console.error("Erreur fetchGaranties :", error);
       return;
     }
-    if (data) {
-      // 2) On force le typage ici
-      const garanties = data as Garantie[];
-      await updateExpiredGaranties(garanties);
-      setGaranties(garanties.filter((g) => !g.expired));
-    }
-  };
+    await updateExpiredGaranties(data as Garantie[]);
+    setGaranties((data as Garantie[]).filter((g) => !g.expired));
+  }, [supabase]);
+  
+  // 2) useEffect qui inclut désormais fetchGaranties
+  useEffect(() => {
+    const getSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      const session = data?.session;
+  
+      if (!session) {
+        router.replace("/auth");
+      } else {
+        setUserId(session.user.id);
+        fetchGaranties(session.user.id);
+      }
+  
+      setIsLoading(false);
+    };
+  
+    getSession();
+  }, [router, fetchGaranties]);
 
   const updateExpiredGaranties = async (data: Garantie[]) => {
     const aujourdHui = new Date();
@@ -146,12 +138,6 @@ export default function Dashboard() {
     // 5) Réinitialiser l'erreur
     setErreur("");
     // 6) Rafraîchir la liste
-    fetchGaranties(userId);
-  }
-};
-const supprimerGarantie = async (id: string) => {
-  const { error } = await supabase.from("garanties").delete().eq("id", id);
-  if (!error && userId) {
     fetchGaranties(userId);
   }
 };
@@ -474,7 +460,7 @@ className="fixed bottom-21 left-10 right-10
     bg-black text-white py-3 text-center font-medium z-40
   "
 >
-  J'ajoute une garantie
+J&apos;ajoute une garantie
 </button>
 {ajoutVisible && (
   <div className="fixed inset-0 bg-black/50 flex items-end z-50">
