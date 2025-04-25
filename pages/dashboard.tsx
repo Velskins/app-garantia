@@ -68,7 +68,7 @@ export default function Dashboard() {
     }
     await updateExpiredGaranties(data as Garantie[]);
     setGaranties((data as Garantie[]).filter((g) => !g.expired));
-  }, [supabase]);
+  }, []);
   
   // 2) useEffect qui inclut désormais fetchGaranties
   useEffect(() => {
@@ -166,7 +166,6 @@ const lancerOCR = async (file: File) => {
   const ligneNom = lignes.find((ligne) =>
     /(Produit|Article|Nom|Désignation|Référence)/i.test(ligne)
   );
-  const nom = ligneNom ? ligneNom.split(":").pop()?.trim() || "" : "";
 
   let dateAchat = "";
   const formatISO = texte.match(/\b(20\d{2})[-\/\.](0?[1-9]|1[0-2])[-\/\.](0?[1-9]|[12][0-9]|3[01])\b/);

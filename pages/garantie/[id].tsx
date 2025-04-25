@@ -52,7 +52,7 @@ export default function GarantieDetail() {
 
       <h1 className="text-2xl font-bold mb-2">{garantie.nom}</h1>
       <p className="text-sm text-gray-700">
-        📅 Date d'achat : {garantie.date_achat}
+        📅 Date Achat : {garantie.date_achat}
       </p>
       <p className="text-sm text-gray-700">
         ⌛ Fin de garantie : {garantie.date_fin}
