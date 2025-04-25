@@ -42,18 +42,17 @@ export default function Dashboard() {
   const [nomMarque, setNomMarque]   = useState<string>("");
   const [dateAchat, setDateAchat] = useState("");
   const [dureeMois, setDureeMois] = useState<number | "">("");
-  const [recherche, setRecherche] = useState("");
   const [erreur, setErreur] = useState("");
-  const [formVisible] = useState(false);
-  const [ocrVisible] = useState(false);
   const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [uploadMessage, setUploadMessage] = useState("");
   const [marque]     = useState<string>("");  
   const [produit]   = useState<string>("");
   const [editorGarantie, setEditorGarantie] = useState<Garantie | null>(null);
-  const [garantieOuverteId] = useState<string | null>(null);
-  const [ajoutVisible, setAjoutVisible] = useState(false);
   const { pathname } = useRouter();
+  const [formVisible, setFormVisible] = useState(false);
+  const [ocrVisible, setOcrVisible]   = useState(false);
+  const [ajoutVisible, setAjoutVisible] = useState(false);
+
   
 
   useEffect(() => {
@@ -477,6 +476,42 @@ className="fixed bottom-21 left-10 right-10
 >
   J'ajoute une garantie
 </button>
+{ajoutVisible && (
+  <div className="fixed inset-0 bg-black/50 flex items-end z-50">
+    <div className="bg-white w-full rounded-t-2xl p-4 space-y-2">
+      <button
+        onClick={() => {
+          setFormVisible(true);
+          setAjoutVisible(false);
+        }}
+        className="w-full py-3 bg-gray-100 rounded-lg text-gray-800 font-medium"
+      >
+        Ajout manuel
+      </button>
+      <button
+        onClick={() => {
+          setOcrVisible(true);
+          setAjoutVisible(false);
+        }}
+        className="w-full py-3 bg-gray-100 rounded-lg text-gray-800 font-medium"
+      >
+        Import de facture
+      </button>
+      <button
+        disabled
+        className="w-full py-3 bg-gray-100 rounded-lg text-gray-400 font-medium cursor-not-allowed"
+      >
+        Caméra (bientôt dispo)
+      </button>
+      <button
+        onClick={() => setAjoutVisible(false)}
+        className="w-full py-3 text-red-500 font-medium"
+      >
+        Annuler
+      </button>
+    </div>
+  </div>
+)}
         {/* <button
           onClick={() => setOcrVisible(!ocrVisible)}
           className="w-full bg-blue-600 text-white py-2 rounded-xl shadow font-medium"
