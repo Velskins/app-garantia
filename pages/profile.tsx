@@ -1,8 +1,10 @@
 import Image from "next/image"
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { ChevronRight } from "lucide-react";
 import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabaseClient";
+import { Camera, FileText, Edit3 } from "lucide-react";
 import nav1 from "@/assets/images/nav/nav1.png";
 import nav2 from "@/assets/images/nav/nav2.png";
 import nav3 from "@/assets/images/nav/nav3.png";
@@ -24,6 +26,10 @@ export default function Profile() {
   const [confirmation, setConfirmation] = useState("");
   const [expiredGaranties, setExpiredGaranties] = useState<Garantie[]>([]);
   const { pathname } = useRouter();
+  const [ajoutVisible, setAjoutVisible] = useState(false);
+  const [formVisible, setFormVisible] = useState(false);
+
+
 
   useEffect(() => {
     const fetchExpired = async () => {
@@ -99,84 +105,134 @@ export default function Profile() {
   return (
     <div className="min-h-screen flex flex-col bg-white pb-24">
       <div className="p-4">
-        <h1 className="text-xl font-bold text-black-800">Mon profil</h1>
-        <p className="text-sm text-black-500">Connecté en tant que :</p>
-        {email ? (
-          <p className="text-sm text-black-700 font-semibold mt-1">{email}</p>
-        ) : (
-          <p className="text-sm text-black-400 mt-1">Chargement...</p>
-        )}
+      <h1 className="text-4xl font-semibold underline decoration-4 decoration-black underline-offset-2 mb-4">
+      Mon profil
+      </h1>
+      <p className="text-sm text-gray-700 mb-4">
+  Connecté en tant que : <span className="font-semibold">{email || "Chargement…"}</span>
+</p>
       </div>
 
-      <div className="px-4 flex flex-col gap-3">
-        <button
-          onClick={() => setAfficheFormulaire((prev) => !prev)}
-          className="text-left text-blue-600 text-sm font-medium hover:underline flex items-center gap-1"
-        >
-          {afficheFormulaire ? "Fermer le formulaire" : "Modifier mon mot de passe"} 🔽
-        </button>
+      <div className="px-4 space-y-4">
+  {/* 1. Modifier mon profil */}
+  <Link href="/profile/edit">
+    <div className="flex justify-between items-center p-4 bg-yellow-50 rounded-3xl mb-5">
+      <span className="text-base font-black underline">Modifier mon profil</span>
+      <ChevronRight className="w-5 h-5 text-gray-900" />
+    </div>
+  </Link>
 
-        {afficheFormulaire && (
-          <>
-            <input
-              type="password"
-              placeholder="Nouveau mot de passe"
-              value={nouveauMDP}
-              onChange={(e) => setNouveauMDP(e.target.value)}
-              className="border p-2 rounded-lg text-sm"
-            />
-            <input
-              type="password"
-              placeholder="Confirmer le mot de passe"
-              value={confirmation}
-              onChange={(e) => setConfirmation(e.target.value)}
-              className="border p-2 rounded-lg text-sm"
-            />
+  {/* 2. Garanties expirées */}
+  <Link href="/expired">
+    <div className="flex justify-between items-center p-4 bg-pink-50 rounded-3xl mb-5">
+      <span className="text-base font-black underline">Garanties expirées</span>
+      <ChevronRight className="w-5 h-5 text-gray-900" />
+    </div>
+  </Link>
+
+  {/* 3. Paramètres */}
+  <Link href="/settings">
+    <div className="flex justify-between items-center p-4 bg-green-50 rounded-3xl mb-5">
+      <span className="text-base font-black underline">Paramètres</span>
+      <ChevronRight className="w-5 h-5 text-gray-900" />
+    </div>
+  </Link>
+
+  {/* 4. Alertes */}
+  <Link href="/reminders">
+    <div className="flex justify-between items-center p-4 bg-indigo-50 rounded-3xl mb-5">
+      <span className="text-base font-black underline">Alertes</span>
+      <ChevronRight className="w-5 h-5 text-gray-900" />
+    </div>
+  </Link>
+
+  {/* 5. Se déconnecter */}
+  <button onClick={async () => { await supabase.auth.signOut(); router.replace("/auth"); }} className="w-full">
+    <div className="flex justify-between items-center p-4 bg-gray-200 rounded-3xl">
+      <span className="text-base font-black underline">Se déconnecter</span>
+      <ChevronRight className="w-5 h-5 text-gray-900" />
+    </div>
+  </button>
+</div>     
+
+
+<div
+  style={{ background: "linear-gradient(to top, white 75%, transparent 100%)" }}
+  className="fixed bottom-0 left-0 right-0 h-60 px-4 flex items-center justify-between"
+>
+    <div className="fixed bottom-24 left-0 right-0 px-4">
+      <div className="mt-4">
+      <button
+  onClick={() => setAjoutVisible(true)}
+className="fixed bottom-21 left-10 right-10
+    bg-black text-white py-3 text-center font-medium z-40
+  "
+>
+J&apos;ajoute une garantie
+</button>
+{ajoutVisible && (
+        <div className="fixed inset-0 z-50 flex items-end">
+          {/* 1) Overlay cliquable pour fermer */}
+          <div
+            className="absolute inset-0 bg-black/30"
+            onClick={() => setAjoutVisible(false)}
+          />
+
+          {/* 2) Le menu, stoppe la propagation */}
+          <div
+            className="relative w-full p-4 space-y-3 rounded-t-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Option Photo */}
             <button
-              onClick={modifierMotDePasse}
-              className="py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition"
+              onClick={() => {
+                /* ta logique photo */
+                setAjoutVisible(false);
+              }}
+              className="flex items-center w-full p-3 bg-yellow-50 rounded-2xl mb-5"
             >
-              Enregistrer les modifications
+              <Camera className="w-5 h-5 mr-3 text-yellow-900" />
+              <span className="font-medium text-yellow-900">
+                Ajouter depuis une photo
+              </span>
             </button>
-            {message && <p className="text-sm text-green-600">{message}</p>}
-          </>
-        )}
 
-        <hr className="my-4" />
+            {/* Option Fichier */}
+            <button
+              onClick={() => {
+                /* ta logique fichier */
+                setAjoutVisible(false);
+              }}
+              className="flex items-center w-full p-3 bg-indigo-50 rounded-2xl mb-5"
+            >
+              <FileText className="w-5 h-5 mr-3 text-indigo-900" />
+              <span className="font-medium text-indigo-900">
+                Ajouter depuis un fichier
+              </span>
+            </button>
 
-        <button
-          onClick={supprimerCompte}
-          className="w-full py-3 bg-red-500 text-white rounded-xl font-medium hover:bg-red-600 transition"
-        >
-          Supprimer mon compte
-        </button>
+            {/* Option Manuel */}
+            <button
+              onClick={() => {
+                setFormVisible(true);
+                setAjoutVisible(false);
+              }}
+              className="flex items-center w-full p-3 bg-green-50 rounded-2xl mb-30"
+            >
+              <Edit3 className="w-5 h-5 mr-3 text-green-900" />
+              <span className="font-medium text-green-900">
+                Ajouter manuellement
+              </span>
+            </button>
+          </div>
+        </div>
+      )} 
 
-        <button
-          onClick={handleLogout}
-          className="w-full py-3 mt-2 bg-gray-200 text-black-700 rounded-xl font-medium hover:bg-gray-300 transition"
-        >
-          Se déconnecter
-        </button>
-      </div>
-      <div className="mt-6 px-4">
-  <h2 className="text-lg font-bold text-gray-800 mb-2">Garanties expirées</h2>
-  {expiredGaranties.length === 0 ? (
-    <p className="text-sm text-gray-500">Aucune garantie expirée pour le moment.</p>
-  ) : (
-<ul className="space-y-2">
-  {expiredGaranties.map((g) => (
-    <li
-      key={g.id}
-      className="p-3 bg-gray-100 rounded shadow-sm cursor-pointer hover:bg-gray-200 transition"
-      onClick={() => router.push(`/garantie/${g.id}`)}
-    >
-      <p className="font-semibold">{g.nom}</p>
-      <p className="text-sm text-gray-600">Expirée le {g.date_fin}</p>
-    </li>
-  ))}
-</ul>
-  )}
+
 </div>
+ </div>
+ </div>
+
 
 <nav className="fixed bottom-5 left-10 right-10 shadow-t flex items-center z-50">
   {/* Dashboard */}
@@ -194,7 +250,7 @@ export default function Profile() {
   </Link>
 
   {/* Ajouter */}
-  <Link href="/add" className="flex-1 flex justify-center items-center">
+  <Link href="/comparateur" className="flex-1 flex justify-center items-center">
     <Image src={nav3} alt="Ajouter" width={45} height={45} />
   </Link>
 

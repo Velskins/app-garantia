@@ -7,6 +7,7 @@ import Tesseract from "tesseract.js";
 import * as pdfjsLib from "pdfjs-dist";
 import { Search, Filter } from "lucide-react";
 import { ChevronRight, Hourglass } from "lucide-react";
+import { Camera, FileText, Edit3 } from "lucide-react";
 import { Cpu, DollarSign, Car } from "lucide-react";
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 import nav1 from "@/assets/images/nav/nav1.png";
@@ -351,13 +352,13 @@ return (
       <div key={g.id} className="mb-4">
         <div className="flex items-center justify-between">
           {/* Icône + infos */}
-          <div className="flex items-center">
-            <div className={`${bg} p-5 rounded-xl mr-4`}>
+          <div className="flex items-center ml-3">
+            <div className={`${bg} px-8 py-7 rounded-xl mr-4`}>
               <Icon className={`w-10 h-10 ${fg}`} />
             </div>
-            <div>
+            <div className="ml-3">
               {/* 1. Marque */}
-              <p className="text-base font-black uppercase text-gray-900">
+              <p className="text-base font-bold underline uppercase text-gray-900">
                 {g.marque}
               </p>
 
@@ -381,10 +382,14 @@ return (
           </div>
 
           {/* Voir plus */}
-          <button className="flex flex-col items-center text-gray-900 font-medium">
-            <ChevronRight className="w-5 h-5" />
-            <span className="underline ml-1 text-sm">Voir plus</span>
-          </button>
+{/* Après */}
+<Link
+  href={`/garantie/${g.id}`}
+  className="flex flex-col items-center text-gray-900 font-medium"
+>
+  <ChevronRight className="w-5 h-5" />
+  <span className="underline ml-1 text-sm">Voir plus</span>
+</Link>
         </div>
 
         {/* Séparateur */}
@@ -393,7 +398,10 @@ return (
     );
   })}
 </div>
-
+<div
+  style={{ background: "linear-gradient(to top, white 75%, transparent 100%)" }}
+  className="fixed bottom-0 left-0 right-0 h-60 px-4 flex items-center justify-between"
+>
     <div className="fixed bottom-24 left-0 right-0 px-4">
       {/* <button
         onClick={() => setFormVisible(!formVisible)}
@@ -457,42 +465,62 @@ className="fixed bottom-21 left-10 right-10
 J&apos;ajoute une garantie
 </button>
 {ajoutVisible && (
-  <div className="fixed inset-0 bg-black/50 flex items-end z-50">
-    <div className="bg-white w-full rounded-t-2xl p-4 space-y-2">
-      <button
-        onClick={() => {
-          setFormVisible(true);
-          setAjoutVisible(false);
-        }}
-        className="w-full py-3 bg-gray-100 rounded-lg text-gray-800 font-medium"
-      >
-        Ajout manuel
-      </button>
-      <button
-        onClick={() => {
-          setOcrVisible(true);
-          setAjoutVisible(false);
-        }}
-        className="w-full py-3 bg-gray-100 rounded-lg text-gray-800 font-medium"
-      >
-        Import de facture
-      </button>
-      <button
-        disabled
-        className="w-full py-3 bg-gray-100 rounded-lg text-gray-400 font-medium cursor-not-allowed"
-      >
-        Caméra (bientôt dispo)
-      </button>
-      <button
-        onClick={() => setAjoutVisible(false)}
-        className="w-full py-3 text-red-500 font-medium"
-      >
-        Annuler
-      </button>
-    </div>
-  </div>
-)}
-        {/* <button
+        <div className="fixed inset-0 z-50 flex items-end">
+          {/* 1) Overlay cliquable pour fermer */}
+          <div
+            className="absolute inset-0 bg-black/30"
+            onClick={() => setAjoutVisible(false)}
+          />
+
+          {/* 2) Le menu, stoppe la propagation */}
+          <div
+            className="relative w-full p-4 space-y-3 rounded-t-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Option Photo */}
+            <button
+              onClick={() => {
+                /* ta logique photo */
+                setAjoutVisible(false);
+              }}
+              className="flex items-center w-full p-3 bg-yellow-50 rounded-2xl mb-5"
+            >
+              <Camera className="w-5 h-5 mr-3 text-yellow-900" />
+              <span className="font-medium text-yellow-900">
+                Ajouter depuis une photo
+              </span>
+            </button>
+
+            {/* Option Fichier */}
+            <button
+              onClick={() => {
+                /* ta logique fichier */
+                setAjoutVisible(false);
+              }}
+              className="flex items-center w-full p-3 bg-indigo-50 rounded-2xl mb-5"
+            >
+              <FileText className="w-5 h-5 mr-3 text-indigo-900" />
+              <span className="font-medium text-indigo-900">
+                Ajouter depuis un fichier
+              </span>
+            </button>
+
+            {/* Option Manuel */}
+            <button
+              onClick={() => {
+                setFormVisible(true);
+                setAjoutVisible(false);
+              }}
+              className="flex items-center w-full p-3 bg-green-50 rounded-2xl mb-30"
+            >
+              <Edit3 className="w-5 h-5 mr-3 text-green-900" />
+              <span className="font-medium text-green-900">
+                Ajouter manuellement
+              </span>
+            </button>
+          </div>
+        </div>
+      )}        {/* <button
           onClick={() => setOcrVisible(!ocrVisible)}
           className="w-full bg-blue-600 text-white py-2 rounded-xl shadow font-medium"
         >
@@ -610,7 +638,7 @@ J&apos;ajoute une garantie
   </Link>
 
   {/* Ajouter */}
-  <Link href="/add" className="flex-1 flex justify-center items-center">
+  <Link href="/comparateur" className="flex-1 flex justify-center items-center">
     <Image src={nav3} alt="Ajouter" width={45} height={45} />
   </Link>
 
@@ -619,6 +647,9 @@ J&apos;ajoute une garantie
     <Image src={nav4} alt="Profil" width={30} height={30} />
   </Link>
 </nav>
+
+</div>
+
   </div>
 );
 }

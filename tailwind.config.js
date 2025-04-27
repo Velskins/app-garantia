@@ -15,3 +15,14 @@ module.exports = {
   },
   plugins: [],
 };
+
+module.exports = {
+  theme: {
+    extend: {
+      borderRadius: {
+        "3xl": "2rem", // si tu veux un 3xl
+        "4xl": "2.5rem", // et même un 4xl
+      },
+    },
+  },
+};
