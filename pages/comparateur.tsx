@@ -72,6 +72,7 @@ export default function Comparateur() {
 
         {/* 6. Bouton principal */}
       </div>
+      <nav className="fixed bottom-5 left-10 right-10 shadow-t flex items-center z-50">
       <button
   onClick={() => setAjoutVisible(true)}
 className="fixed bottom-21 left-10 right-10
@@ -80,22 +81,22 @@ className="fixed bottom-21 left-10 right-10
 >
 J&apos;ajoute une garantie
 </button>
-      <nav className="fixed bottom-5 left-10 right-10 shadow-t flex items-center z-50">
+
   {/* Dashboard */}
   <Link
     href="/dashboard"
-    className="flex-1 flex justify-center items-center"
+    className="w-1/4 flex-1 flex justify-center items-center"
   >
       <Image src={nav1} alt="Garanties" width={30} height={30} />
   </Link>
 
   {/* Rappels */}
-  <Link href="/reminders" className="flex-1 flex justify-center items-center">
+  <Link href="/reminders" className="w-1/4 flex-1 flex justify-center items-center">
     <Image src={nav2} alt="Rappels" width={30} height={30} />
   </Link>
 
   {/* Ajouter */}
-  <Link href="/comparateur" className="flex-1 flex justify-center items-center">
+  <Link href="/comparateur" className="w-1/4 flex-1 flex justify-center items-center">
   <div
       className={`
         py-4 px-6 
@@ -109,7 +110,7 @@ J&apos;ajoute une garantie
   </Link>
 
   {/* Profil */}
-  <Link href="/profile" className="flex-1 flex justify-center items-center">
+  <Link href="/profile" className="w-1/4 flex-1 flex justify-center items-center">
     <Image src={nav4} alt="Profil" width={30} height={30} />
   </Link>
 </nav>

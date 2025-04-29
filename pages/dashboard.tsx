@@ -53,6 +53,7 @@ export default function Dashboard() {
   const [formVisible, setFormVisible] = useState(false);
   const [ocrVisible, setOcrVisible]   = useState(false);
   const [ajoutVisible, setAjoutVisible] = useState(false);
+  const [recherche, setRecherche] = useState<string>("");
 
   
 
@@ -318,86 +319,79 @@ return (
     <h1 className="text-3xl font-semibold underline decoration-4 decoration-black underline-offset-2 mb-6">
   Mes garanties
 </h1>
+{/* Barre de recherche + filtre */}
 <div className="flex items-center mb-6">
-  {/* barre de recherche noire */}
   <div className="flex items-center bg-black rounded-br-xl px-4 h-12 flex-grow">
     <input
       type="text"
       placeholder="Rechercher une garantie…"
-      className="flex-grow bg-transparent placeholder-white text-white text-lg focus:outline-none"
+      value={recherche}
+      onChange={(e) => setRecherche(e.target.value)}
+      className="flex-grow bg-transparent placeholder-white text-white text-sm focus:outline-none"
     />
-    <Search className="w-7 h-7 text-white ml-3" />
+    <Search className="w-5 h-5 text-white ml-3" />
   </div>
-
-  {/* bouton filtre aligné */}
   <button className="ml-4 p-2 h-12 flex items-center">
     <Filter className="w-5 h-5 text-black" />
   </button>
 </div>
-</div>
 
-{/* …dans ton return() de dashboard.tsx… */}
-{/* …dans ton return() de dashboard.tsx… */}
-<div className="flex-1 overflow-y-auto px-4 pb-4">
-  {garanties.map((g, i) => {
-    // Palette pastel cyclique
-    const palette = [
-      { bg: "bg-pink-50",   fg: "text-pink-600",   Icon: Cpu        },
-      { bg: "bg-green-50",  fg: "text-green-600",  Icon: DollarSign},
-      { bg: "bg-indigo-50", fg: "text-indigo-600", Icon: Car        },
-    ];
-    const { bg, fg, Icon } = palette[i % palette.length];
+{/* Liste filtrée des garanties */}
+<div className="flex-1 overflow-y-auto px-4 pb-4 space-y-4">
+  {garanties
+    .filter((g) =>
+      g.marque.toLowerCase().includes(recherche.toLowerCase()) ||
+      g.produit.toLowerCase().includes(recherche.toLowerCase())
+    )
+    .map((g, i) => {
+      const palette = [
+        { bg: "bg-pink-50",   fg: "text-pink-600",   Icon: Cpu       },
+        { bg: "bg-green-50",  fg: "text-green-600",  Icon: DollarSign },
+        { bg: "bg-indigo-50", fg: "text-indigo-600", Icon: Car       },
+      ];
+      const { bg, fg, Icon } = palette[i % palette.length];
 
-    return (
-      <div key={g.id} className="mb-4">
-        <div className="flex items-center justify-between">
-          {/* Icône + infos */}
-          <div className="flex items-center ml-3">
-            <div className={`${bg} px-8 py-7 rounded-xl mr-4`}>
-              <Icon className={`w-10 h-10 ${fg}`} />
-            </div>
-            <div className="ml-3">
-              {/* 1. Marque */}
-              <p className="text-base font-bold underline uppercase text-gray-900">
-                {g.marque}
-              </p>
-
-              {/* 2. Nom du produit */}
-              <p className="text-sm font-medium text-gray-700 leading-tight mt-1">
-                {g.produit}
-              </p>
-
-              {/* Dates */}
-              <div className="mt-1 flex flex-col space-y-1 text-sm text-blue-600">
-                <p>Acheté : {g.date_achat}</p>
-                <p>Expire : {g.date_fin}</p>
+      return (
+        <div key={g.id} className="mb-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <div className={`${bg} p-3 rounded-xl mr-4`}>
+                <Icon className={`w-6 h-6 ${fg}`} />
               </div>
-
-              {/* Durée */}
-              <p className="flex items-center text-xs font-bold text-red-500 mt-1">
-                <Hourglass className="w-4 h-4 mr-1" />
-                {g.duree_mois} mois
-              </p>
+              <div className="flex-1 flex flex-col">
+                <p className="text-base font-black uppercase text-gray-900">
+                  {g.marque}
+                </p>
+                <p className="text-sm font-medium text-gray-700 mt-1">
+                  {g.produit}
+                </p>
+                <div className="mt-1 flex flex-col space-y-1 text-sm text-blue-600">
+                  <p>Acheté : {g.date_achat}</p>
+                  <p>Expire : {g.date_fin}</p>
+                </div>
+                <p className="flex items-center text-xs text-gray-500 mt-1">
+                  <Hourglass className="w-4 h-4 mr-1" />
+                  {g.duree_mois} mois
+                </p>
+              </div>
             </div>
+            <Link
+              href={`/garantie/${g.id}`}
+              className="flex flex-col items-center text-gray-900 font-medium"
+            >
+              <ChevronRight className="w-5 h-5" />
+              <span className="underline mt-1 text-sm">Voir plus</span>
+            </Link>
           </div>
-
-          {/* Voir plus */}
-{/* Après */}
-<Link
-  href={`/garantie/${g.id}`}
-  className="flex flex-col items-center text-gray-900 font-medium"
->
-  <ChevronRight className="w-5 h-5" />
-  <span className="underline ml-1 text-sm">Voir plus</span>
-</Link>
+          <hr className="border-t border-gray-200 mt-4" />
         </div>
-
-        {/* Séparateur */}
-        <hr className="border-t border-gray-200 mt-4" />
-      </div>
-    );
-  })}
+      );
+    })}
 </div>
+</div>
+
+{/* …dans ton return() de dashboard.tsx… */}
+{/* …dans ton return() de dashboard.tsx… */}
 <div
   style={{ background: "linear-gradient(to top, white 75%, transparent 100%)" }}
   className="fixed bottom-0 left-0 right-0 h-60 px-4 flex items-center justify-between"
@@ -454,6 +448,17 @@ return (
       )}
 
       <div className="mt-4">
+  {/* <button
+    disabled
+    className="w-full bg-gray-300 text-gray-600 py-2 rounded-xl shadow font-medium cursor-not-allowed"
+  >
+    Caméra (bientôt dispo)
+  </button> */}
+</div>
+    </div>
+
+    <nav className="fixed bottom-5 left-10 right-10 shadow-t flex items-center z-50">
+    <div className="mt-4">
         {/* Bouton fixe "J'ajoute ma garantie" */}
 {/* Bouton principal fixe */}
 <button
@@ -604,25 +609,17 @@ J&apos;ajoute une garantie
           </div>
         )}
       </div>
-      <div className="mt-4">
-  {/* <button
-    disabled
-    className="w-full bg-gray-300 text-gray-600 py-2 rounded-xl shadow font-medium cursor-not-allowed"
-  >
-    Caméra (bientôt dispo)
-  </button> */}
-</div>
-    </div>
 
-    <nav className="fixed bottom-5 left-10 right-10 shadow-t flex items-center z-50">
+      <nav className="fixed bottom-3 left-10 right-10 shadow-t flex z-50">
   {/* Dashboard */}
   <Link
     href="/dashboard"
-    className="flex-1 flex justify-center items-center"
+    className="w-1/4 flex justify-center items-center"
   >
     <div
       className={`
-        py-4 px-6 rounded-bl-xl
+        w-full h-full flex justify-center items-center
+        py-4 rounded-bl-xl
         ${pathname === "/dashboard"
           ? "bg-gradient-to-br from-pink-300 via-red-200 to-yellow-200"
           : ""}
@@ -633,19 +630,35 @@ J&apos;ajoute une garantie
   </Link>
 
   {/* Rappels */}
-  <Link href="/reminders" className="flex-1 flex justify-center items-center">
-    <Image src={nav2} alt="Rappels" width={30} height={30} />
+  <Link
+    href="/reminders"
+    className="w-1/4 flex justify-center items-center"
+  >
+    <div className="w-full h-full flex justify-center items-center py-4">
+      <Image src={nav2} alt="Rappels" width={30} height={30} />
+    </div>
   </Link>
 
   {/* Ajouter */}
-  <Link href="/comparateur" className="flex-1 flex justify-center items-center">
-    <Image src={nav3} alt="Ajouter" width={45} height={45} />
+  <Link
+    href="/comparateur"
+    className="w-1/4 flex justify-center items-center"
+  >
+    <div className="w-full h-full flex justify-center items-center py-4">
+      <Image src={nav3} alt="Ajouter" width={45} height={45} />
+    </div>
   </Link>
 
   {/* Profil */}
-  <Link href="/profile" className="flex-1 flex justify-center items-center">
-    <Image src={nav4} alt="Profil" width={30} height={30} />
+  <Link
+    href="/profile"
+    className="w-1/4 flex justify-center items-center"
+  >
+    <div className="w-full h-full flex justify-center items-center py-4">
+      <Image src={nav4} alt="Profil" width={40} height={40} />
+    </div>
   </Link>
+</nav>
 </nav>
 
 </div>

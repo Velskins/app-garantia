@@ -139,6 +139,8 @@ export default function Reminders() {
   style={{ background: "linear-gradient(to top, white 75%, transparent 100%)" }}
   className="fixed bottom-0 left-0 right-0 h-60 px-4 flex items-center justify-between"
 >
+
+    <nav className="fixed bottom-5 left-10 right-10 shadow-t flex items-center z-50">
     <div className="fixed bottom-24 left-0 right-0 px-4">
       <div className="mt-4">
       <button
@@ -210,17 +212,16 @@ J&apos;ajoute une garantie
 </div>
     </div>
 
-    <nav className="fixed bottom-5 left-10 right-10 shadow-t flex items-center z-50">
     <Link
     href="/dashboard"
-    className="flex-1 flex justify-center items-center"
+    className="w-1/4 flex-1 flex justify-center items-center"
   >
 
       <Image src={nav1} alt="Garanties" width={30} height={30} />
   </Link>
 
   {/* Rappels */}
-  <Link href="/reminders" className="flex-1 flex justify-center items-center">
+  <Link href="/reminders" className="w-1/4 flex-1 flex justify-center items-center">
   <div
       className={`
         py-4 px-6
@@ -234,13 +235,13 @@ J&apos;ajoute une garantie
   </Link>
 
   {/* Ajouter */}
-  <Link href="/comparateur" className="flex-1 flex justify-center items-center">
+  <Link href="/comparateur" className=" w-1/4 flex-1 flex justify-center items-center">
     <Image src={nav3} alt="Ajouter" width={45} height={45} />
   </Link>
 
   {/* Profil */}
-  <Link href="/profile" className="flex-1 flex justify-center items-center">
-    <Image src={nav4} alt="Profil" width={30} height={30} />
+  <Link href="/profile" className="w-1/4 flex-1 flex justify-center items-center">
+    <Image src={nav4} alt="Profil" width={40} height={40} />
   </Link>
 </nav>
 
