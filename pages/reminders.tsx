@@ -3,8 +3,6 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { differenceInCalendarDays, parseISO } from "date-fns";
-import { Camera, FileText, Edit3 } from "lucide-react";
-
 import { Cpu, Home, Car } from "lucide-react"; // ou vos icônes métier
 import { supabase } from "@/lib/supabaseClient";
 import nav1 from "@/assets/images/nav/nav1.png";
@@ -22,11 +20,7 @@ interface Garantie {
 export default function Reminders() {
   const router = useRouter();
   const [rappels, setRappels] = useState<Garantie[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const { pathname } = useRouter();
-  const [ajoutVisible, setAjoutVisible] = useState(false);
-  const [formVisible, setFormVisible] = useState(false);
-
 
   useEffect(() => {
     const fetchRappels = async () => {
@@ -56,8 +50,6 @@ export default function Reminders() {
 
         setRappels(rappelsFiltres);
       }
-
-      setIsLoading(false);
     };
 
     fetchRappels();

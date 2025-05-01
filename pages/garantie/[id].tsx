@@ -1,7 +1,6 @@
 // pages/garantie/[id].tsx
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import { ChevronLeft, ChevronRight, Hourglass } from "lucide-react";
 import { differenceInCalendarDays, parseISO } from "date-fns";
 import { supabase } from "@/lib/supabaseClient";

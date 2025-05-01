@@ -19,11 +19,11 @@ interface Garantie {
 export default function Profile() {
   const router = useRouter();
   const [email] = useState("");
-  const [message, setMessage] = useState("");
   const [nouveauMDP, setNouveauMDP] = useState("");
   const [confirmation, setConfirmation] = useState("");
-  const [expiredGaranties, setExpiredGaranties] = useState<Garantie[]>([]);
+  const [setExpiredGaranties] = useState<Garantie[]>([]);
   const { pathname } = useRouter();
+  const [message, setMessage] = useState<string>("");
 
 
 
@@ -44,59 +44,10 @@ export default function Profile() {
         .eq("expired", true)
         .order("date_fin", { ascending: false });
   
-      if (!error && data) {
-        setExpiredGaranties(data);
-      }
     };
   
     fetchExpired();
   }, [router]);
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.push("/auth");
-  };
-
-  const supprimerCompte = async () => {
-    const confirmationSuppression = confirm("Êtes-vous sûr de vouloir supprimer votre compte ?");
-    if (!confirmationSuppression) return;
-
-    const { data: userData } = await supabase.auth.getUser();
-    const user = userData.user;
-
-    if (!user) {
-      alert("Utilisateur introuvable.");
-      return;
-    }
-
-    alert("Supabase ne permet pas la suppression directe en front-end. À gérer plus tard côté back-end.");
-  };
-
-  const modifierMotDePasse = async () => {
-    setMessage("");
-
-    if (!nouveauMDP || !confirmation) {
-      setMessage("Veuillez remplir les deux champs.");
-      return;
-    }
-
-    if (nouveauMDP !== confirmation) {
-      setMessage("Les mots de passe ne correspondent pas.");
-      return;
-    }
-
-    const { error } = await supabase.auth.updateUser({
-      password: nouveauMDP,
-    });
-
-    if (error) {
-      setMessage("Erreur lors de la mise à jour.");
-    } else {
-      setMessage("Mot de passe mis à jour !");
-      setNouveauMDP("");
-      setConfirmation("");
-    }
-  };
 
   return (
     <div className="min-h-screen flex flex-col bg-white pb-24">
@@ -149,6 +100,11 @@ export default function Profile() {
       <ChevronRight className="w-5 h-5 text-gray-900" />
     </div>
   </button>
+  {message && (
+  <p className="text-sm text-red-500 mb-4">
+    {message}
+  </p>
+)}
 </div>     
 
 

@@ -51,7 +51,7 @@ export default function Dashboard() {
   const [editorGarantie, setEditorGarantie] = useState<Garantie | null>(null);
   const { pathname } = useRouter();
   const [formVisible, setFormVisible] = useState(false);
-  const [ocrVisible, setOcrVisible]   = useState(false);
+  const [ocrVisible]   = useState(false);
   const [ajoutVisible, setAjoutVisible] = useState(false);
   const [recherche, setRecherche] = useState<string>("");
 
