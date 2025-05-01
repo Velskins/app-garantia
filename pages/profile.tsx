@@ -9,13 +9,6 @@ import nav2 from "@/assets/images/nav/nav2.png";
 import nav3 from "@/assets/images/nav/nav3.png";
 import nav4 from "@/assets/images/nav/nav4.png";
 
-interface Garantie {
-  id: string;
-  nom: string;
-  date_fin: string;
-  expired?: boolean;
-}
-
 export default function Profile() {
   const router = useRouter();
   const [email] = useState("");
