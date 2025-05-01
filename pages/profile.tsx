@@ -19,11 +19,8 @@ interface Garantie {
 export default function Profile() {
   const router = useRouter();
   const [email] = useState("");
-  const [nouveauMDP, setNouveauMDP] = useState("");
-  const [confirmation, setConfirmation] = useState("");
-  const [setExpiredGaranties] = useState<Garantie[]>([]);
   const { pathname } = useRouter();
-  const [message, setMessage] = useState<string>("");
+  const [message] = useState<string>("");
 
 
 
@@ -36,13 +33,6 @@ export default function Profile() {
         router.replace("/auth");
         return;
       }
-  
-      const { data, error } = await supabase
-        .from("garanties")
-        .select("*")
-        .eq("user_id", session.user.id)
-        .eq("expired", true)
-        .order("date_fin", { ascending: false });
   
     };
   
