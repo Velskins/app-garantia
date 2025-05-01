@@ -118,16 +118,17 @@ export default function GarantieDetail() {
 
       {/* 4. Footer “J’ajoute une garantie” */}
       <button
-        onClick={() =>
-          router.push({
-            pathname: "/dashboard",
-            query: { ajout: "1" },
-          })
-        }
-        className="fixed bottom-5 left-4 right-4 bg-black text-white py-3 text-center font-medium z-40"
-      >
-        J&apos;ajoute une garantie
-      </button>
+  onClick={() =>
+    router.push({
+      pathname: "/dashboard",
+      query: { ajout: "1" },
+    })
+  }
+  className="fixed bottom-21 left-10 right-10
+    bg-black text-white py-3 text-center font-medium z-40"
+>
+  J&apos;ajoute une garantie
+</button>
     </div>
   );
 }

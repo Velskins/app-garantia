@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { ChevronRight } from "lucide-react";
 import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabaseClient";
-import { Camera, FileText, Edit3 } from "lucide-react";
 import nav1 from "@/assets/images/nav/nav1.png";
 import nav2 from "@/assets/images/nav/nav2.png";
 import nav3 from "@/assets/images/nav/nav3.png";
@@ -21,13 +20,10 @@ export default function Profile() {
   const router = useRouter();
   const [email] = useState("");
   const [message, setMessage] = useState("");
-  const [afficheFormulaire, setAfficheFormulaire] = useState(false);
   const [nouveauMDP, setNouveauMDP] = useState("");
   const [confirmation, setConfirmation] = useState("");
   const [expiredGaranties, setExpiredGaranties] = useState<Garantie[]>([]);
   const { pathname } = useRouter();
-  const [ajoutVisible, setAjoutVisible] = useState(false);
-  const [formVisible, setFormVisible] = useState(false);
 
 
 
@@ -167,71 +163,17 @@ export default function Profile() {
 <div className="fixed bottom-24 left-0 right-0 px-4">
       <div className="mt-4">
       <button
-  onClick={() => setAjoutVisible(true)}
-className="fixed bottom-21 left-10 right-10
-    bg-black text-white py-3 text-center font-medium z-40
-  "
+  onClick={() =>
+    router.push({
+      pathname: "/dashboard",
+      query: { ajout: "1" },
+    })
+  }
+  className="fixed bottom-21 left-10 right-10
+    bg-black text-white py-3 text-center font-medium z-40"
 >
-J&apos;ajoute une garantie
+  J&apos;ajoute une garantie
 </button>
-{ajoutVisible && (
-        <div className="fixed inset-0 z-50 flex items-end">
-          {/* 1) Overlay cliquable pour fermer */}
-          <div
-            className="absolute inset-0 bg-black/30"
-            onClick={() => setAjoutVisible(false)}
-          />
-
-          {/* 2) Le menu, stoppe la propagation */}
-          <div
-            className="relative w-full p-4 space-y-3 rounded-t-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Option Photo */}
-            <button
-              onClick={() => {
-                /* ta logique photo */
-                setAjoutVisible(false);
-              }}
-              className="flex items-center w-full p-3 bg-yellow-50 rounded-2xl mb-5"
-            >
-              <Camera className="w-5 h-5 mr-3 text-yellow-900" />
-              <span className="font-medium text-yellow-900">
-                Ajouter depuis une photo
-              </span>
-            </button>
-
-            {/* Option Fichier */}
-            <button
-              onClick={() => {
-                /* ta logique fichier */
-                setAjoutVisible(false);
-              }}
-              className="flex items-center w-full p-3 bg-indigo-50 rounded-2xl mb-5"
-            >
-              <FileText className="w-5 h-5 mr-3 text-indigo-900" />
-              <span className="font-medium text-indigo-900">
-                Ajouter depuis un fichier
-              </span>
-            </button>
-
-            {/* Option Manuel */}
-            <button
-              onClick={() => {
-                setFormVisible(true);
-                setAjoutVisible(false);
-              }}
-              className="flex items-center w-full p-3 bg-green-50 rounded-2xl mb-30"
-            >
-              <Edit3 className="w-5 h-5 mr-3 text-green-900" />
-              <span className="font-medium text-green-900">
-                Ajouter manuellement
-              </span>
-            </button>
-          </div>
-        </div>
-      )} 
-
 
 </div>
  </div>

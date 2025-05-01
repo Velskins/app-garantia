@@ -610,7 +610,6 @@ J&apos;ajoute une garantie
         )}
       </div>
 
-      <nav className="fixed bottom-3 left-10 right-10 shadow-t flex z-50">
   {/* Dashboard */}
   <Link
     href="/dashboard"
@@ -658,7 +657,6 @@ J&apos;ajoute une garantie
       <Image src={nav4} alt="Profil" width={40} height={40} />
     </div>
   </Link>
-</nav>
 </nav>
 
 </div>
