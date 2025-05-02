@@ -10,10 +10,10 @@ import { ChevronRight, Hourglass } from "lucide-react";
 import { Camera, FileText, Edit3 } from "lucide-react";
 import { Cpu, DollarSign, Car } from "lucide-react";
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-import nav1 from "@/assets/images/nav/nav1.png";
-import nav2 from "@/assets/images/nav/nav2.png";
-import nav3 from "@/assets/images/nav/nav3.png";
-import nav4 from "@/assets/images/nav/nav4.png";
+import nav1 from "@/assets/images/nav_image/nav_dashboard.png";
+import nav2 from "@/assets/images/nav_image/nav_reminders.png";
+import nav3 from "@/assets/images/nav_image/nav_comp.png";
+import nav4 from "@/assets/images/nav_image/nav_profile.png";
 
 
 

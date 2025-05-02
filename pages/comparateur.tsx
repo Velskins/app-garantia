@@ -4,10 +4,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabaseClient";
-import nav1 from "@/assets/images/nav/nav1.png";
-import nav2 from "@/assets/images/nav/nav2.png";
-import nav3 from "@/assets/images/nav/nav3.png";
-import nav4 from "@/assets/images/nav/nav4.png";
+import nav1 from "@/assets/images/nav_image/nav_dashboard.png";
+import nav2 from "@/assets/images/nav_image/nav_reminders.png";
+import nav3 from "@/assets/images/nav_image/nav_comp.png";
+import nav4 from "@/assets/images/nav_image/nav_profile.png";
 
 export default function Comparateur() {
   const router = useRouter();
