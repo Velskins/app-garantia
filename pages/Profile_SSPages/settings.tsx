@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { ChevronLeft } from "lucide-react";
 export default function SettingsPage() {
   const router = useRouter();
-  const [language, setLanguage] = useState("Français");
+  const [language] = useState("Français");
   const [darkMode, setDarkMode] = useState(false);
 
   // TODO : charger / sauvegarder ces préférences via Supabase ou Context
