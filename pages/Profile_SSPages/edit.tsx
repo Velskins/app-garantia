@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { ChevronLeft } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 
+
 export default function ProfileEdit() {
   const router = useRouter();
   const [fullName, setFullName] = useState("");
@@ -23,7 +24,7 @@ export default function ProfileEdit() {
       setEmail(user.email || "");
       // TODO: fetch fullName from your profile table
     })();
-  }, []);
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
