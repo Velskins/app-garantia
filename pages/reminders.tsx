@@ -59,7 +59,7 @@ export default function Reminders() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white pb-20">
-      <div className="p-4">
+      <div className="p-10">
         <h1 className="text-4xl font-semibold underline decoration-4 decoration-black underline-offset-2 mb-4">
           Rappels
         </h1>
@@ -69,7 +69,7 @@ export default function Reminders() {
         </p>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-4">
+      <div className="flex-1 overflow-y-auto px-10 pb-4 space-y-4">
   {rappels.length === 0 ? (
     <p className="text-sm text-gray-400">Aucun rappel pour le moment.</p>
   ) : (
@@ -106,13 +106,14 @@ export default function Reminders() {
                 </p>
                 {/* Date d’expiration */}
                 <p className="mt-1 text-sm text-blue-600">
-                  Garantie expire le {g.date_fin}
+                  Garantie expire le<br/>
+                  <strong>{g.date_fin}</strong>
                 </p>
               </div>
             </div>
 
             {/* Badge J-N */}
-            <span className="bg-yellow-200 text-yellow-900 text-xs font-semibold px-2 py-1 rounded">
+            <span className="bg-yellow-200 text-yellow-900 w-12 text-xs font-semibold px-2 py-1 rounded">
               J-{joursRestants}
             </span>
           </div>

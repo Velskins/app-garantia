@@ -35,7 +35,7 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white pb-24">
-      <div className="p-4">
+      <div className="p-10">
       <h1 className="text-4xl font-semibold underline decoration-4 decoration-black underline-offset-2 mb-4">
       Mon profil
       </h1>
@@ -44,7 +44,7 @@ export default function Profile() {
 </p>
       </div>
 
-      <div className="px-4 space-y-4">
+      <div className="px-10 space-y-4">
   {/* 1. Modifier mon profil */}
   <Link href="/Profile_SSPages/edit">
     <div className="flex justify-between items-center p-4 bg-yellow-50 rounded-3xl mb-5">

@@ -50,7 +50,7 @@ export default function Comparateur() {
 
   return (
     <div className="min-h-screen bg-white pb-20">
-      <div className="p-4">
+      <div className="p-10">
         {/* 1. En-tête */}
         <h1 className="text-3xl font-semibold underline decoration-4 decoration-black underline-offset-2 mb-6">
           Comparateur
