@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabaseClient";
 import Tesseract from "tesseract.js";
 import * as pdfjsLib from "pdfjs-dist";
 import { Search, Filter } from "lucide-react";
-import { ChevronRight, Hourglass } from "lucide-react";
+import {Hourglass } from "lucide-react";
 import { Camera, FileText, Edit3 } from "lucide-react";
 import { Cpu, DollarSign, Car } from "lucide-react";
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
@@ -14,6 +14,7 @@ import nav1 from "@/assets/images/nav_image/nav_dashboard.png";
 import nav2 from "@/assets/images/nav_image/nav_reminders.png";
 import nav3 from "@/assets/images/nav_image/nav_comp.png";
 import nav4 from "@/assets/images/nav_image/nav_profile.png";
+import fleche from"@/assets/images/base/fleche.png";
 
 
 
@@ -46,14 +47,93 @@ export default function Dashboard() {
   const [erreur, setErreur] = useState("");
   const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [uploadMessage, setUploadMessage] = useState("");
-  const [marque]     = useState<string>("");  
-  const [produit]   = useState<string>("");
+  const [marque, setMarque]     = useState<string>("");
+  const [produit, setProduit]   = useState<string>("");
   const [editorGarantie, setEditorGarantie] = useState<Garantie | null>(null);
   const { pathname } = useRouter();
   const [formVisible, setFormVisible] = useState(false);
-  const [ocrVisible]   = useState(false);
+  const [ocrVisible, setOcrVisible] = useState(false);
   const [ajoutVisible, setAjoutVisible] = useState(false);
   const [recherche, setRecherche] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+
+  const [categories] = useState<string[]>([
+    "Électroménager",
+    "Électronique grand public",
+    "Informatique & bureautique",
+    "Jardinage & plein air",
+    "Bricolage & outillage",
+    "Mobilier & décoration",
+    "Cuisine & arts de la table",
+    "Automobile & moto",
+    "Sports & loisirs",
+    "Santé & bien-être",
+    "Montres & bijoux",
+    "Bébés & enfants",
+    "Photographie & vidéo",
+    "Outils professionnels",
+    "Autres",
+  ]);
+
+  // pour manuel
+const [nouvelleGarantie, setNouvelleGarantie] = useState<{
+  marque: string;
+  produit: string;
+  categorie: string;
+  date_achat: string;
+  duree_mois: string;
+}>({
+  marque: "",
+  produit: "",
+  categorie: "",
+  date_achat: "",
+  duree_mois: "",
+});
+
+const handleAddManuel = async () => {
+  const { marque, produit, categorie, date_achat, duree_mois } = nouvelleGarantie;
+
+  // Validation
+  if (!marque || !produit || !categorie || !date_achat || !duree_mois) {
+    // tu peux afficher une erreur ici, ex. setErreur("…")
+    return;
+  }
+
+  // Calcul de la date de fin
+  const dateFinObj = new Date(date_achat);
+  dateFinObj.setMonth(dateFinObj.getMonth() + Number(duree_mois));
+  const date_fin = dateFinObj.toISOString().split("T")[0];
+
+  // Envoi à Supabase
+  const { error } = await supabase
+    .from("garanties")
+    .insert({
+      user_id: userId,
+      marque,
+      produit,
+      categorie,
+      date_achat,
+      duree_mois: Number(duree_mois),
+      date_fin,
+      facture_url: null,
+    });
+
+  if (error) {
+    console.error("Erreur ajout manuel :", error);
+    // setErreur("Erreur lors de l'ajout.");
+  } else {
+    // Réinitialise le form
+    setNouvelleGarantie({
+      marque: "",
+      produit: "",
+      categorie: "",
+      date_achat: "",
+      duree_mois: "",
+    });
+    setFormVisible(false);
+    fetchGaranties(userId!);
+  }
+};
 
   
 
@@ -181,16 +261,6 @@ const lancerOCR = async (file: File) => {
     const type = dureeMatch[2].toLowerCase();
     duree = type.startsWith("an") ? nombre * 12 : nombre;
   }
-
-  setEditorGarantie({
-    marque,            // ta variable d’état
-    produit,           // idem
-    date_achat: dateAchat,
-    duree_mois: duree,
-    date_fin: "",      // ou calculée automatiquement
-    facture_url: null,
-    expired: false,
-  });
 };
 
 const handleFileSelect = (file: File | null) => {
@@ -308,15 +378,10 @@ const validerGarantieOCR = async () => {
   setIsLoading(false);
 };
 
-// Enfin, si tu veux afficher un loader pendant l’upload :
-if (isLoading) {
-  return <div className="p-4 text-neutral-700">Chargement...</div>;
-}
-
 return (
   <div className="min-h-screen flex flex-col bg-white pb-32">
     <div className="p-10">
-    <h1 className="text-3xl font-semibold underline decoration-4 decoration-black underline-offset-2 mb-6">
+    <h1 className="text-4xl font-bold underline decoration-4 decoration-black underline-offset-2 mb-4">
   Mes garanties
 </h1>
 {/* Barre de recherche + filtre */}
@@ -337,7 +402,7 @@ return (
 </div>
 
 {/* Liste filtrée des garanties */}
-<div className="flex-1 overflow-y-auto px-4 pb-4 space-y-4">
+<div className="flex-1 overflow-y-auto pb-4 space-y-4">
   {garanties
     .filter((g) =>
       g.marque.toLowerCase().includes(recherche.toLowerCase()) ||
@@ -355,8 +420,8 @@ return (
         <div key={g.id} className="mb-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <div className={`${bg} p-3 rounded-xl mr-4`}>
-                <Icon className={`w-6 h-6 ${fg}`} />
+              <div className={`${bg} flex items-center justify-center p-3 rounded-xl mr-4 w-[90px] h-[80px]`}>
+                <Icon className={`w-[36px] h-[37px] ${fg}`} />
               </div>
               <div className="flex-1 flex flex-col">
                 <p className="text-base font-black uppercase text-gray-900">
@@ -377,9 +442,12 @@ return (
             </div>
             <Link
               href={`/garantie/${g.id}`}
-              className="flex flex-col items-center text-gray-900 font-medium"
-            >
-              <ChevronRight className="w-5 h-5" />
+              className="flex flex-col items-center text-gray-900 font-medium">
+              <Image
+                src={fleche}       // ou un chemin public, ex: "/assets/icons/arrow-right.png"
+                alt="Voir plus"
+                width={20}
+                height={20} />
               <span className="underline mt-1 text-sm">Voir plus</span>
             </Link>
           </div>
@@ -404,48 +472,105 @@ return (
         {formVisible ? "Fermer le formulaire" : "Ajouter manuellement"}
       </button> */}
 
-      {formVisible && (
-        <div className="mt-4 bg-white border p-4 rounded-xl shadow">
-          {erreur && <p className="text-red-500 text-sm mb-2">{erreur}</p>}
-          <input
-          type="text"
-          placeholder="Marque"
-          value={nomMarque}
-          onChange={(e) => setNomMarque(e.target.value)}
-          className="border p-2 rounded-lg text-sm mb-2 w-full"
-          />
-          <input
-            type="text"
-            placeholder="Nom du produit"
-            value={nomProduit}
-            onChange={(e) => setNomProduit(e.target.value)}
-            className="border p-2 rounded-lg text-sm mb-2 w-full"
-          />
-          <label className="block text-sm text-black text-neutral-900 mb-1">
-            Date d’achat :
-            <input
-              type="date"
-              value={dateAchat}
-              onChange={(e) => setDateAchat(e.target.value)}
-              className="border p-2 rounded-lg text-sm mt-1 w-full"
-            />
-          </label>
-          <input
-            type="number"
-            placeholder="Durée de garantie (mois)"
-            value={dureeMois}
-            onChange={(e) => setDureeMois(Number(e.target.value))}
-            className="border p-2 rounded-lg text-sm mb-2 w-full"
-            min={1}
-          />
-          <button
-            onClick={ajouterGarantie}
-            className="bg-blue-600 text-white w-full py-2 rounded-lg font-medium"
-          >
-            Ajouter
-          </button>
-        </div>
-      )}
+{formVisible && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div
+      className="absolute inset-0 bg-black/30"
+      onClick={() => setFormVisible(false)}
+    />
+    <div
+      className="relative w-full max-w-md bg-white p-6 rounded-2xl border-[10px] border-[#E1FFF3]"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <h3 className="text-lg font-semibold mb-4">Ajouter manuellement</h3>
+
+      <input
+        type="text"
+        value={nouvelleGarantie.marque}
+        onChange={(e) =>
+          setNouvelleGarantie({ ...nouvelleGarantie, marque: e.target.value })
+        }
+        placeholder="Marque"
+        className="w-full border rounded p-2 mb-4"
+      />
+
+      <input
+        type="text"
+        value={nouvelleGarantie.produit}
+        onChange={(e) =>
+          setNouvelleGarantie({ ...nouvelleGarantie, produit: e.target.value })
+        }
+        placeholder="Produit"
+        className="w-full border rounded p-2 mb-4"
+      />
+
+      <div className="mb-4">
+        <label className="block text-m font-medium text-gray-700 mb-1">
+          Catégorie
+        </label>
+        <select
+          value={nouvelleGarantie.categorie}
+          onChange={(e) =>
+            setNouvelleGarantie({
+              ...nouvelleGarantie,
+              categorie: e.target.value,
+            })
+          }
+          className="w-full border rounded p-2"
+        >
+          <option value="">-- Choisir une catégorie --</option>
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
+      </div>
+      <label className="block text-m font-medium text-gray-700 mb-1">
+          Date d'achat
+        </label>
+      <input
+        type="date"
+        value={nouvelleGarantie.date_achat}
+        onChange={(e) =>
+          setNouvelleGarantie({
+            ...nouvelleGarantie,
+            date_achat: e.target.value,
+          })
+        }
+        className="w-full border rounded p-2 mb-4"
+      />
+
+      <input
+        type="number"
+        value={nouvelleGarantie.duree_mois}
+        onChange={(e) =>
+          setNouvelleGarantie({
+            ...nouvelleGarantie,
+            duree_mois: e.target.value,
+          })
+        }
+        placeholder="Durée (mois) de la garantie"
+        className="w-full border rounded p-2 mb-6"
+      />
+
+      <div className="flex space-x-2">
+        <button
+          onClick={handleAddManuel}
+          className="flex-1 bg-black text-white py-2 rounded-lg"
+        >
+          Ajouter
+        </button>
+        <button
+          onClick={() => setFormVisible(false)}
+          className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg"
+        >
+          Annuler
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
       <div className="mt-4">
   {/* <button
@@ -488,7 +613,7 @@ J&apos;ajoute une garantie
                 /* ta logique photo */
                 setAjoutVisible(false);
               }}
-              className="flex items-center w-full p-3 bg-yellow-50 rounded-2xl mb-5"
+              className="flex items-center w-full p-3 bg-[#FFF8E1] rounded-2xl mb-5"
             >
               <Camera className="w-5 h-5 mr-3 text-yellow-900" />
               <span className="font-medium text-yellow-900">
@@ -502,7 +627,7 @@ J&apos;ajoute une garantie
                 /* ta logique fichier */
                 setAjoutVisible(false);
               }}
-              className="flex items-center w-full p-3 bg-indigo-50 rounded-2xl mb-5"
+              className="flex items-center w-full p-3 bg-[#E0E3FE] rounded-2xl mb-5"
             >
               <FileText className="w-5 h-5 mr-3 text-indigo-900" />
               <span className="font-medium text-indigo-900">
@@ -516,7 +641,7 @@ J&apos;ajoute une garantie
                 setFormVisible(true);
                 setAjoutVisible(false);
               }}
-              className="flex items-center w-full p-3 bg-green-50 rounded-2xl mb-30"
+              className="flex items-center w-full p-3 bg-[#E1FFF3] rounded-2xl mb-30"
             >
               <Edit3 className="w-5 h-5 mr-3 text-green-900" />
               <span className="font-medium text-green-900">

@@ -97,19 +97,19 @@ export default function GarantieDetail() {
 
       {/* 3. Action buttons */}
       <div className="px-4 space-y-3">
-        <button className="flex justify-between items-center w-full p-4 bg-green-50 rounded-2xl">
+        <button className="flex justify-between items-center w-full p-4 bg-[#E1FFF3] rounded-2xl">
           <span className="text-base font-black underline">Ajouter un fichier</span>
           <ChevronRight className="w-5 h-5 text-gray-900" />
         </button>
-        <button className="flex justify-between items-center w-full p-4 bg-indigo-50 rounded-2xl">
+        <button className="flex justify-between items-center w-full p-4 bg-[#E0E3FE] rounded-2xl">
           <span className="text-base font-black underline">Ajouter un rappel</span>
           <ChevronRight className="w-5 h-5 text-gray-900" />
         </button>
-        <button className="flex justify-between items-center w-full p-4 bg-yellow-50 rounded-2xl">
+        <button className="flex justify-between items-center w-full p-4 bg-[#FFF8E1] rounded-2xl">
           <span className="text-base font-black underline">Modifier la garantie</span>
           <ChevronRight className="w-5 h-5 text-gray-900" />
         </button>
-        <button className="flex justify-between items-center w-full p-4 bg-pink-50 rounded-2xl">
+        <button className="flex justify-between items-center w-full p-4 bg-[#FEE0E0] rounded-2xl">
           <span className="text-base font-black underline">Supprimer la garantie</span>
           <ChevronRight className="w-5 h-5 text-gray-900" />
         </button>

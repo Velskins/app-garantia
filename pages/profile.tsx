@@ -36,7 +36,7 @@ export default function Profile() {
   return (
     <div className="min-h-screen flex flex-col bg-white pb-24">
       <div className="p-10">
-      <h1 className="text-4xl font-semibold underline decoration-4 decoration-black underline-offset-2 mb-4">
+      <h1 className="text-4xl font-bold underline decoration-4 decoration-black underline-offset-2 mb-4">
       Mon profil
       </h1>
       <p className="text-sm text-gray-700 mb-4">

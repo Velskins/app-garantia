@@ -60,7 +60,7 @@ export default function Reminders() {
   return (
     <div className="min-h-screen flex flex-col bg-white pb-20">
       <div className="p-10">
-        <h1 className="text-4xl font-semibold underline decoration-4 decoration-black underline-offset-2 mb-4">
+        <h1 className="text-4xl font-bold underline decoration-4 decoration-black underline-offset-2 mb-4">
           Rappels
         </h1>
         <p className="text-xl text-black-500 mb-5
@@ -92,7 +92,7 @@ export default function Reminders() {
           <div className="flex items-center justify-between">
             {/* Icône + texte */}
             <div className="flex items-center">
-              <div className={`${bg} px-9 py-8 rounded-2uyuloplppppà^)xl mr-4`}>
+              <div className={`${bg} px-9 py-8 rounded-2xl mr-4`}>
                 <Icon className={`w-10 h-10 ${fg}`} />
               </div>
               <div className="flex flex-col">
