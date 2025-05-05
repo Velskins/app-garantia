@@ -40,22 +40,14 @@ export default function Dashboard() {
   const [userId, setUserId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [garanties, setGaranties] = useState<Garantie[]>([]);
-  const [nomProduit, setNomProduit] = useState("");
-  const [nomMarque, setNomMarque]   = useState<string>("");
-  const [dateAchat, setDateAchat] = useState("");
-  const [dureeMois, setDureeMois] = useState<number | "">("");
-  const [erreur, setErreur] = useState("");
   const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [uploadMessage, setUploadMessage] = useState("");
-  const [marque, setMarque]     = useState<string>("");
-  const [produit, setProduit]   = useState<string>("");
   const [editorGarantie, setEditorGarantie] = useState<Garantie | null>(null);
   const { pathname } = useRouter();
   const [formVisible, setFormVisible] = useState(false);
   const [ocrVisible, setOcrVisible] = useState(false);
   const [ajoutVisible, setAjoutVisible] = useState(false);
   const [recherche, setRecherche] = useState<string>("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   const [categories] = useState<string[]>([
     "Électroménager",
@@ -187,42 +179,6 @@ const handleAddManuel = async () => {
     await Promise.all(promises);
   };
 
-  const ajouterGarantie = async () => {
-    if (!nomProduit || !dateAchat || !dureeMois || !userId) {
-      setErreur("Veuillez remplir tous les champs.");
-      return;
-    }
-
-  const dateFinObj = new Date(dateAchat);
-  dateFinObj.setMonth(dateFinObj.getMonth() + Number(dureeMois));
-  const dateFin = dateFinObj.toISOString().split("T")[0];
-
-  const { error } = await supabase.from("garanties").insert({
-      user_id:   userId,
-      marque:    nomMarque,
-      produit:   nomProduit,
-      date_achat: dateAchat,
-      duree_mois: dureeMois,
-      date_fin:   dateFin,
-    });
-
-  if (error) {
-    setErreur("Erreur lors de l'ajout.");
-  } else {
-    // 1) Vider la marque
-    setNomMarque("");
-    // 2) Vider le nom du produit
-    setNomProduit("");
-    // 3) Vider la date d'achat
-    setDateAchat("");
-    // 4) Remettre la durée à 0 (type number)
-    setDureeMois(0);
-    // 5) Réinitialiser l'erreur
-    setErreur("");
-    // 6) Rafraîchir la liste
-    fetchGaranties(userId);
-  }
-};
 
 const parseDateFr = (texte: string): string => {
   const regex = /(\d{1,2})\s+([a-zA-Zéûîèà]+)\s+(\d{4})/i;
@@ -378,6 +334,14 @@ const validerGarantieOCR = async () => {
   setIsLoading(false);
 };
 
+if (isLoading) {
+  return (
+    <div className="p-4 text-neutral-700">
+      Chargement...
+    </div>
+  );
+}
+
 return (
   <div className="min-h-screen flex flex-col bg-white pb-32">
     <div className="p-10">
@@ -465,12 +429,7 @@ return (
   className="fixed bottom-0 left-0 right-0 h-60 px-4 flex items-center justify-between"
 >
     <div className="fixed bottom-24 left-0 right-0 px-4">
-      {/* <button
-        onClick={() => setFormVisible(!formVisible)}
-        className="w-full bg-blue-600 text-white py-2 rounded-xl shadow font-medium"
-      >
-        {formVisible ? "Fermer le formulaire" : "Ajouter manuellement"}
-      </button> */}
+
 
 {formVisible && (
   <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -657,82 +616,102 @@ J&apos;ajoute une garantie
           {ocrVisible ? "Fermer l'import de facture" : "Importer une facture"}
         </button> */}
 
-        {ocrVisible && (
-          <div className="mt-3 bg-white border p-4 rounded-xl shadow">
-            <input
-              type="file"
-              onChange={(e) => handleFileSelect(e.target.files?.[0] || null)}
-              className="border p-2 mb-2 w-full"
-            />
-            {uploadMessage && (
-              <div className="text-sm text-center py-1 animate-pulse text-blue-700">
-                {uploadMessage}
-              </div>
-            )}
-
-{editorGarantie && (
-  <div className="mt-4">
-    <h3 className="font-semibold mb-2">Garantie extraite :</h3>
-
-    {/* Champ Marque */}
-    <input
-      type="text"
-      value={editorGarantie.marque}
-      onChange={(e) =>
-        setEditorGarantie({ ...editorGarantie, marque: e.target.value })
-      }
-      className="border p-2 rounded w-full mb-2"
-      placeholder="Marque"
+{ocrVisible && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center">
+    {/* Backdrop cliquable pour fermer */}
+    <div
+      className="absolute inset-0 bg-black/30"
+      onClick={() => setOcrVisible(false)}
     />
 
-    {/* Champ Nom du produit */}
-    <input
-      type="text"
-      value={editorGarantie.produit}
-      onChange={(e) =>
-        setEditorGarantie({ ...editorGarantie, produit: e.target.value })
-      }
-      className="border p-2 rounded w-full mb-2"
-      placeholder="Nom du produit"
-    />
-
-    {/* Champ Date d'achat */}
-    <input
-      type="date"
-      value={editorGarantie.date_achat}
-      onChange={(e) =>
-        setEditorGarantie({
-          ...editorGarantie,
-          date_achat: e.target.value,
-        })
-      }
-      className="border p-2 rounded w-full mb-2"
-    />
-
-    {/* Champ Durée (mois) */}
-    <input
-      type="number"
-      value={editorGarantie.duree_mois}
-      onChange={(e) =>
-        setEditorGarantie({
-          ...editorGarantie,
-          duree_mois: parseInt(e.target.value, 10) || 0,
-        })
-      }
-      className="border p-2 rounded w-full mb-2"
-      placeholder="Durée (mois)"
-    />
-
-    <button
-      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition w-full"
-      onClick={validerGarantieOCR}
+    {/* Contenu OCR en pop-up */}
+    <div
+      className="relative w-full max-w-md bg-white border p-4 rounded-2xl shadow"
+      onClick={(e) => e.stopPropagation()}
     >
-      Valider cette garantie
-    </button>
+      <input
+        type="file"
+        onChange={(e) => handleFileSelect(e.target.files?.[0] || null)}
+        className="border p-2 mb-2 w-full"
+      />
+      {uploadMessage && (
+        <div className="text-sm text-center py-1 animate-pulse text-blue-700">
+          {uploadMessage}
+        </div>
+      )}
+
+      {editorGarantie && (
+        <div className="mt-4">
+          <h3 className="font-semibold mb-2">Garantie extraite :</h3>
+
+          {/* Champ Marque */}
+          <input
+            type="text"
+            value={editorGarantie.marque}
+            onChange={(e) =>
+              setEditorGarantie({ ...editorGarantie, marque: e.target.value })
+            }
+            className="border p-2 rounded w-full mb-2"
+            placeholder="Marque"
+          />
+
+          {/* Champ Nom du produit */}
+          <input
+            type="text"
+            value={editorGarantie.produit}
+            onChange={(e) =>
+              setEditorGarantie({ ...editorGarantie, produit: e.target.value })
+            }
+            className="border p-2 rounded w-full mb-2"
+            placeholder="Nom du produit"
+          />
+
+          {/* Champ Date d'achat */}
+          <input
+            type="date"
+            value={editorGarantie.date_achat}
+            onChange={(e) =>
+              setEditorGarantie({
+                ...editorGarantie,
+                date_achat: e.target.value,
+              })
+            }
+            className="border p-2 rounded w-full mb-2"
+          />
+
+          {/* Champ Durée (mois) */}
+          <input
+            type="number"
+            value={editorGarantie.duree_mois}
+            onChange={(e) =>
+              setEditorGarantie({
+                ...editorGarantie,
+                duree_mois: parseInt(e.target.value, 10) || 0,
+              })
+            }
+            className="border p-2 rounded w-full mb-2"
+            placeholder="Durée (mois)"
+          />
+
+          <button
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition w-full mb-2"
+            onClick={validerGarantieOCR}
+          >
+            Valider cette garantie
+          </button>
+
+          <button
+            className="w-full py-2 text-center text-gray-500 rounded hover:bg-gray-100"
+            onClick={() => setOcrVisible(false)}
+          >
+            Annuler
+          </button>
+        </div>
+      )}
+    </div>
   </div>
 )}
-          </div>
-        )}
+
       </div>
 
   {/* Dashboard */}
